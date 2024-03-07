@@ -10,14 +10,16 @@ import static java.lang.Thread.currentThread;
 
 public class BoundedBuffer<T> {
     private final Lock lock;
-    private final Condition condition;
+    private final Condition notFull;
+    private final Condition notEmpty;
     private final T[] elements;
     private int insertionIndex;
 
     @SuppressWarnings("unchecked")
     public BoundedBuffer(final int capacity) {
         this.lock = new ReentrantLock();
-        this.condition = lock.newCondition();
+        this.notFull = lock.newCondition();
+        this.notEmpty = lock.newCondition();
         this.elements = (T[]) new Object[capacity];
     }
 
@@ -52,7 +54,7 @@ public class BoundedBuffer<T> {
         this.lock.lock();
         try {
             while (this.isFull()) {
-                this.condition.await();
+                this.notFull.await();
             }
             elements[insertionIndex] = elem;
             insertionIndex++;
@@ -60,7 +62,7 @@ public class BoundedBuffer<T> {
                     "%s put %s into buffer, result buffer = %s\n",
                     currentThread().getName(), elem, this
             );
-            this.condition.signalAll();
+            this.notEmpty.signalAll();
         } catch (final InterruptedException exception) {
             currentThread().interrupt();
         } finally {
@@ -72,7 +74,7 @@ public class BoundedBuffer<T> {
         this.lock.lock();
         try {
             while (this.isEmpty()) {
-                this.condition.await();
+                this.notEmpty.await();
             }
 
             final int lastIndex = insertionIndex - 1;
@@ -83,7 +85,7 @@ public class BoundedBuffer<T> {
                     "%s take %s from buffer, result buffer = %s\n",
                     currentThread().getName(), elem, this
             );
-            condition.signalAll();
+            notFull.signalAll();
             return elem;
         } catch (final InterruptedException exception) {
             currentThread().interrupt();

@@ -21,6 +21,7 @@ public class BoundedBufferInMultithreadedEnvironment {
             });
         };
         final Thread producingThread = new Thread(producingTask);
+        final Thread producingThread1 = new Thread(producingTask);
 
         final Runnable consumingTask = () -> {
             while (!Thread.currentThread().isInterrupted()) {
@@ -34,8 +35,9 @@ public class BoundedBufferInMultithreadedEnvironment {
             }
         };
         final Thread consumingThread = new Thread(consumingTask);
+        final Thread consumingThread1 = new Thread(consumingTask);
 
-        Threads.start(producingThread, consumingThread);
+        Threads.start(producingThread, producingThread1, consumingThread, consumingThread1);
 
     }
 }
