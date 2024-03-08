@@ -2,7 +2,7 @@ package ru.khvatov.learningprojects.multithreading.locks.reentrant.readwritelock
 
 import java.util.concurrent.locks.Lock;
 
-public abstract class AbstractCounter {
+public abstract class AbstractCounter implements Counter {
     private long value;
 
     public AbstractCounter() {}

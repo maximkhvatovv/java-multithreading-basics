@@ -15,6 +15,11 @@ public final class Threads {
         }
     }
 
+    public static void interrupt(Thread... threads) {
+        stream(threads)
+                .forEach(Thread::interrupt);
+    }
+
     public static void printMessageByThread(String message) {
         out.printf("Thread `%s`: %s\n", currentThread().getName(), message);
     }
