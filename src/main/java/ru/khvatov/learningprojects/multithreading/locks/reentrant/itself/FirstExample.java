@@ -1,4 +1,4 @@
-package ru.khvatov.learningprojects.multithreading.locks.reentrant;
+package ru.khvatov.learningprojects.multithreading.locks.reentrant.itself;
 
 import ru.khvatov.learningprojects.multithreading.util.Threads;
 
